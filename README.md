@@ -1,1 +1,2 @@
-# AdsVerificationService
+# Ads Verification Service 
+Сервис проверки 
