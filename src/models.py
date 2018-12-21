@@ -1,10 +1,23 @@
-from src.app import db
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
+
+
+class UserRoles(db.Model):
+    """
+    current supported roles:
+    id = 0, role = admin
+    id = 1, role = moderator
+    id = 2, role = user
+
+    """
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    role = db.Column(db.Text)
 
 
 class User(db.Model):
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    person = db.Column(db.Integer)
+    roles = db.ForeignKey(UserRoles.id)
 
-    def __repr__(self):
-        return '<User %r>' % self.username
