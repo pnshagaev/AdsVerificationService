@@ -1,6 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask_security import UserMixin, RoleMixin
-from sqlalchemy.orm import validates
+from flask_security.utils import hash_password
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.hybrid import hybrid_property
 
 db = SQLAlchemy()
 
@@ -33,9 +34,23 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
-    password = db.Column(db.String(255))
+    _password = db.Column(db.String(255))
     google_api_token = db.Column(db.String(255))
     active = db.Column(db.Boolean())
     confirmed_at = db.Column(db.DateTime())
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
+
+    @property
+    def can_find_in_google(self):
+        return True if self.google_api_token is not None else False
+
+    @hybrid_property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, new_pass):
+        """Salt/Hash and save the user's new password."""
+        new_password_hash = hash_password(new_pass)
+        self._password = new_password_hash

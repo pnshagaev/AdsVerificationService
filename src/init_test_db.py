@@ -1,6 +1,5 @@
 from src.models import Role
-from flask_security.utils import encrypt_password
-
+from flask_security.utils import hash_password
 
 def build_sample_db(db, app, user_datastore):
     """
@@ -23,7 +22,7 @@ def build_sample_db(db, app, user_datastore):
         test_user = user_datastore.create_user(
             first_name='Admin',
             email='admin',
-            password=encrypt_password('admin'),
+            _password=hash_password('admin'),
             roles=[user_role, super_user_role]
         )
 
@@ -45,7 +44,7 @@ def build_sample_db(db, app, user_datastore):
                 first_name=first_names[i],
                 last_name=last_names[i],
                 email=tmp_email,
-                password=encrypt_password(tmp_pass),
+                _password=hash_password(tmp_pass),
                 roles=[user_role, ]
             )
         db.session.commit()
