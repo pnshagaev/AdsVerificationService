@@ -1,11 +1,7 @@
-
+from flask import url_for, redirect, request, abort
 from flask_admin.contrib import sqla
 from flask_security import current_user
 
-from flask import url_for, redirect, request, abort
-
-
-# Create customized model view class
 class BaseModelView(sqla.ModelView):
     def is_accessible(self):
         if not current_user.is_active or not current_user.is_authenticated:
@@ -30,7 +26,11 @@ class BaseModelView(sqla.ModelView):
 
 
 class UserModelView(BaseModelView):
-    form_excluded_columns = ('password', 'active')
+    column_searchable_list = ('first_name', 'last_name', 'email')
+    column_list = ('first_name', 'last_name', 'email', 'can_find_in_google')
+    form_columns = ('first_name', 'last_name', 'email', 'password', 'roles', 'google_api_token', 'active')
+    # create_modal = True
+    # edit_modal = True
 
 
 class RoleModelView(BaseModelView):

@@ -1,2 +1,6 @@
-.python-version
+# ide
 .idea
+
+# envs
+.python-version
+

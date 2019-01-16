@@ -25,6 +25,7 @@ class TestingConfig(object):
     SECURITY_POST_REGISTER_VIEW = "/admin/"
 
     # Flask-Security features
+    # TODO: allow registration only for superuser
     SECURITY_REGISTERABLE = True
     SECURITY_SEND_REGISTER_EMAIL = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
