@@ -7,6 +7,9 @@ class MyHomeView(AdminIndexView):
     @expose('/')
     def index(self):
         if current_user.is_authenticated:
-            return self.render('admin/index.html')
+            return redirect('admin/user')
         else:
             return redirect(url_for('security.login'))
+
+    def is_visible(self):
+        return False
