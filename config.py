@@ -8,7 +8,7 @@ class TestingConfig(object):
     SQLALCHEMY_ECHO = True
 
     # set optional bootswatch theme
-    FLASK_ADMIN_SWATCH = 'cerulean'
+    # FLASK_ADMIN_SWATCH = 'cerulean'
 
     # Flask-Security config
     SECURITY_URL_PREFIX = "/admin"
@@ -19,13 +19,17 @@ class TestingConfig(object):
     SECURITY_LOGIN_URL = "/login/"
     SECURITY_LOGOUT_URL = "/logout/"
     SECURITY_REGISTER_URL = "/register/"
+    SECURITY_RESET_URL = "/reset/"
 
     SECURITY_POST_LOGIN_VIEW = "/admin/"
     SECURITY_POST_LOGOUT_VIEW = "/admin/"
     SECURITY_POST_REGISTER_VIEW = "/admin/"
+    SECURITY_POST_RESET_VIEW = "/admin/"
+
 
     # Flask-Security features
     # TODO: allow registration only for superuser
-    SECURITY_REGISTERABLE = True
+    SECURITY_RECOVERABLE = True
+    SECURITY_REGISTERABLE = False
     SECURITY_SEND_REGISTER_EMAIL = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
