@@ -2,6 +2,7 @@ from flask import url_for, redirect, request, abort
 from flask_admin.contrib import sqla
 from flask_security import current_user
 
+
 class BaseModelView(sqla.ModelView):
     def is_accessible(self):
         if not current_user.is_active or not current_user.is_authenticated:
@@ -27,11 +28,26 @@ class BaseModelView(sqla.ModelView):
 
 class UserModelView(BaseModelView):
     column_searchable_list = ('first_name', 'last_name', 'email')
-    column_list = ('first_name', 'last_name', 'email', 'can_find_in_google')
-    form_columns = ('first_name', 'last_name', 'email', 'password', 'roles', 'google_api_token', 'active')
-    # create_modal = True
-    # edit_modal = True
+    column_list = ('full_name', 'email', 'description', 'roles', 'can_find_in_google')
+    form_columns = ('first_name', 'last_name', 'email', 'description', 'password', 'roles', 'google_api_token', 'active')
+    column_filters = ('roles',)
+    column_labels = {
+        'full_name': 'ФИО',
+        '_password': 'Пароль',
+        'can_find_in_google': 'Поиск в Google',
+        'roles': 'Роли',
+        'description': 'Заметки'
+    }
+    list_template = 'user_list.html'
 
 
 class RoleModelView(BaseModelView):
     form_excluded_columns = ('users',)
+    can_create = False
+    can_delete = False
+    can_edit = False
+
+    column_labels = {
+        'name': 'Роль',
+        'description': 'Описание'
+    }

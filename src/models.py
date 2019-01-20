@@ -38,6 +38,7 @@ class User(db.Model, UserMixin):
     google_api_token = db.Column(db.String(255))
     active = db.Column(db.Boolean())
     confirmed_at = db.Column(db.DateTime())
+    description = db.Column(db.String(255))
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
 
@@ -54,3 +55,7 @@ class User(db.Model, UserMixin):
         """Salt/Hash and save the user's new password."""
         new_password_hash = hash_password(new_pass)
         self._password = new_password_hash
+
+    @property
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
