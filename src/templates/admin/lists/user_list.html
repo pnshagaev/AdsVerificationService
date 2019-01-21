@@ -1,4 +1,5 @@
-{% extends 'admin/model/list.html' %}
+{% extends 'admin/lists/default_list.html' %}
+
 {% block list_row_actions %}
     <a class="icon" href="/admin/user/edit/?id={{ get_pk_value(row) }}&amp;url=/admin/user/" title="Edit Record">
         <span class="fa fa-pencil glyphicon glyphicon-pencil"></span>
@@ -11,4 +12,5 @@
         </button>
     </form>
 {% endblock %}
+
 
