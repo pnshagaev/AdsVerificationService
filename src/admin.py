@@ -27,6 +27,7 @@ class BaseModelView(sqla.ModelView):
 
 
 class UserModelView(BaseModelView):
+    column_sortable_list = []
     column_searchable_list = ('first_name', 'last_name', 'email')
     column_list = ('full_name', 'email', 'description', 'roles', 'can_find_in_google')
     form_columns = ('first_name', 'last_name', 'email', 'description', 'password', 'roles', 'google_api_token', 'active')
@@ -38,10 +39,11 @@ class UserModelView(BaseModelView):
         'roles': 'Роли',
         'description': 'Заметки'
     }
-    list_template = 'user_list.html'
+    list_template = 'admin/lists/user_list.html'
 
 
 class RoleModelView(BaseModelView):
+    column_sortable_list = []
     form_excluded_columns = ('users',)
     can_create = False
     can_delete = False
@@ -51,3 +53,4 @@ class RoleModelView(BaseModelView):
         'name': 'Роль',
         'description': 'Описание'
     }
+    list_template = 'admin/lists/role_list.html'

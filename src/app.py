@@ -13,9 +13,9 @@ from src.admin import UserModelView, RoleModelView
 
 def register_extensions(app):
     db.init_app(app)
-    admin = Admin(app, name='Admin panel', base_template='my_master.html', template_mode='bootstrap3', index_view=MyHomeView())
-    admin.add_view(UserModelView(User, db.session))
-    admin.add_view(RoleModelView(Role, db.session))
+    admin = Admin(app, name='Панель администратора', base_template='my_master.html', template_mode='bootstrap3', index_view=MyHomeView())
+    admin.add_view(UserModelView(User, db.session, name='Пользователи'))
+    admin.add_view(RoleModelView(Role, db.session, name='Роли'))
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
     return security, admin, user_datastore
