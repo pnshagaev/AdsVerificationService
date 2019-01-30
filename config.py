@@ -11,7 +11,7 @@ class TestingConfig(object):
     # FLASK_ADMIN_SWATCH = 'cerulean'
 
     # Flask-Security config
-    SECURITY_URL_PREFIX = "/admin"
+    SECURITY_URL_PREFIX = "/"
     SECURITY_PASSWORD_HASH = "pbkdf2_sha512"
     SECURITY_PASSWORD_SALT = "ATGUOHAELKiubahiughaerGOJAEGj"
 
@@ -19,12 +19,11 @@ class TestingConfig(object):
     SECURITY_LOGIN_URL = "/login/"
     SECURITY_LOGOUT_URL = "/logout/"
     SECURITY_REGISTER_URL = "/register/"
-    SECURITY_RESET_URL = "/reset/"
 
-    SECURITY_POST_LOGIN_VIEW = "/admin/"
-    SECURITY_POST_LOGOUT_VIEW = "/admin/"
-    SECURITY_POST_REGISTER_VIEW = "/admin/"
-    SECURITY_POST_RESET_VIEW = "/admin/"
+    SECURITY_POST_LOGIN_VIEW = "/"
+    SECURITY_POST_LOGOUT_VIEW = "/"
+    SECURITY_POST_REGISTER_VIEW = "/"
+    SECURITY_POST_RESET_VIEW = "/"
 
 
     # Flask-Security features
