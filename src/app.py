@@ -5,7 +5,7 @@ from flask import url_for
 from flask_admin import Admin
 from flask_admin import helpers as admin_helpers
 from flask_security import Security, SQLAlchemyUserDatastore
-from src.views import MyHomeView
+from src.views import MyHomeView, ClientView
 from src.init_test_db import build_sample_db
 from src.models import db, User, Role
 from src.admin import UserModelView, RoleModelView
@@ -17,6 +17,7 @@ def register_extensions(app):
                   template_mode='bootstrap3', index_view=MyHomeView(url='/'))
     admin.add_view(UserModelView(User, db.session, name='Пользователи'))
     admin.add_view(RoleModelView(Role, db.session, name='Роли'))
+    admin.add_view(ClientView(name='Client', endpoint='client'))
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
     return security, admin, user_datastore
