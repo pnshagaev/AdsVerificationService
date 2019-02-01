@@ -5,7 +5,6 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 db = SQLAlchemy()
 
-# Define models
 roles_users = db.Table(
     'roles_users',
     db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
@@ -14,13 +13,6 @@ roles_users = db.Table(
 
 
 class Role(db.Model, RoleMixin):
-    """
-    current supported roles:
-    id = 0, role = admin
-    id = 1, role = moderator
-    id = 2, role = user
-
-    """
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
@@ -52,9 +44,7 @@ class User(db.Model, UserMixin):
 
     @password.setter
     def password(self, new_pass):
-        """Salt/Hash and save the user's new password."""
-        new_password_hash = hash_password(new_pass)
-        self._password = new_password_hash
+        self._password = hash_password(new_pass)
 
     @property
     def full_name(self):

@@ -1,5 +1,7 @@
 from flask_script import Manager
-from src.app import flask_app as app, build_db
+
+from application.app import flask_app as app, build_db
+
 manager = Manager(app)
 
 
@@ -15,6 +17,3 @@ def build_test_db():
 
 if __name__ == "__main__":
     manager.run()
-
-
-

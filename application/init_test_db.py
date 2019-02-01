@@ -1,4 +1,4 @@
-from src.models import Role
+from application.src.models import Role
 from flask_security.utils import hash_password
 
 def build_sample_db(db, app, user_datastore):
@@ -14,16 +14,19 @@ def build_sample_db(db, app, user_datastore):
         db.create_all()
 
         user_role = Role(name='user')
+        admin = Role(name='administrator')
         super_user_role = Role(name='superuser')
+
         db.session.add(user_role)
+        db.session.add(admin)
         db.session.add(super_user_role)
         db.session.commit()
 
-        test_user = user_datastore.create_user(
+        user_datastore.create_user(
             first_name='Admin',
             email='admin',
             _password=hash_password('admin'),
-            roles=[user_role, super_user_role]
+            roles=[user_role, super_user_role, admin]
         )
 
         first_names = [
