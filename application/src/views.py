@@ -60,7 +60,7 @@ class MyHomeView(AdminIndexView, BaseModelView):
 
 class UserModelView(BaseModelView, sqla.ModelView):
     column_sortable_list = []
-    column_searchable_list = ('first_name', 'last_name', 'email')
+    column_searchable_list = ('first_name', 'last_name', 'email', 'description')
     column_list = ('full_name', 'email', 'description', 'roles', 'can_find_in_google')
     form_columns = ('first_name', 'last_name', 'email', 'description', 'password', 'roles', 'google_api_token', 'active')
     column_filters = ('roles',)
