@@ -9,35 +9,32 @@ from flask_security import Security, SQLAlchemyUserDatastore
 from application.init_test_db import build_sample_db
 from application.src.models import db, User, Role
 from application.src.views import MyHomeView, ClientView, UserModelView, RoleModelView
+from application.src.views import mail
 
+app = Flask(__name__)
+app.config.from_object('application.config.TestingConfig')
 
-def register_extensions(app):
-    db.init_app(app)
-    admin = Admin(app, name='Панель администратора', base_template='my_master.html',
-                  template_mode='bootstrap3', index_view=MyHomeView(url='/'))
-    admin.add_view(UserModelView(User, db.session, name='Пользователи'))
-    admin.add_view(RoleModelView(Role, db.session, name='Роли'))
-    admin.add_view(ClientView(name='Client', endpoint='client'))
-    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    security = Security(app, user_datastore)
-    return security, admin, user_datastore
+# init db
+db.init_app(app)
 
+# init flask admin
+admin = Admin(app, base_template='my_master.html', template_mode='bootstrap3', index_view=MyHomeView(url='/'))
+admin.add_view(UserModelView(User, db.session, name='Пользователи'))
+admin.add_view(RoleModelView(Role, db.session, name='Роли'))
+admin.add_view(ClientView(name='Поиск', endpoint='client'))
 
-def create_app(config):
-    app = Flask(__name__)
-    app.config.from_object(config)
-    return app
-    # Build a sample db on the fly, if one does not exist yet.
-
-
-flask_app = create_app('application.config.TestingConfig')
-security, admin, user_datastore = register_extensions(flask_app)
+#datastore
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
 app_dir = os.path.realpath(os.path.dirname(__file__))
-database_path = os.path.join(app_dir, flask_app.config['DATABASE_FILE'])
+database_path = os.path.join(app_dir, app.config['DATABASE_FILE'])
+
+# mail
+mail.init_app(app)
 
 
 def build_db():
-    build_sample_db(db, flask_app, user_datastore)
+    build_sample_db(db, app, user_datastore)
 
 
 @security.context_processor

@@ -1,6 +1,6 @@
 from flask_script import Manager
 
-from application.app import flask_app as app, build_db
+from application.app import app, build_db
 
 manager = Manager(app)
 

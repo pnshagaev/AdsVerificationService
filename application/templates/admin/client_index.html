@@ -17,7 +17,6 @@
 {% block tail_js %}
     {{ super() }}
     <script>
-        $(".navbar-brand").html('Панель клиента')
         $("#search").click(function () {
                 let data = $("#searchTextArea").val();
                 $.post( "{{ url_for('client.index') }}", {'data': data})

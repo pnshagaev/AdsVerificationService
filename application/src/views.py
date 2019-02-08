@@ -7,6 +7,9 @@ from flask_security import current_user
 
 from application.src.roles import RolesTypes, at_least_one_of_roles_in_roles_list, admin_roles
 from application.src.screen_save import search_words
+from flask_mail import Message, Mail
+
+mail = Mail()
 
 
 def redirect_not_autentificated(func):
@@ -22,17 +25,7 @@ def redirect_not_autentificated(func):
 
 class BaseModelView(object):
 
-    @staticmethod
-    def is_accessible():
-        if not current_user.is_active or not current_user.is_authenticated:
-            return False
-
-        if current_user.has_role('superuser'):
-            return True
-
-        return False
-
-    def _handle_view(self, *args, **kwargs):
+   def _handle_view(self, *args, **kwargs):
         """
         Override builtin _handle_view in order to redirect users when a view is not accessible.
         """
@@ -43,6 +36,26 @@ class BaseModelView(object):
             else:
                 # login
                 return redirect(url_for('security.login', next=request.url))
+
+
+class BaseAdminView(BaseModelView):
+    @staticmethod
+    def is_accessible():
+        if not current_user.is_active or not current_user.is_authenticated:
+            return False
+        if at_least_one_of_roles_in_roles_list(admin_roles, current_user.roles):
+            return True
+        return False
+
+
+class BaseClientView(BaseModelView):
+    @staticmethod
+    def is_accessible():
+        if not current_user.is_active or not current_user.is_authenticated:
+            return False
+        if current_user.has_role(RolesTypes.user.name):
+            return True
+        return False
 
 
 class MyHomeView(AdminIndexView, BaseModelView):
@@ -58,7 +71,7 @@ class MyHomeView(AdminIndexView, BaseModelView):
         return False
 
 
-class UserModelView(BaseModelView, sqla.ModelView):
+class UserModelView(BaseAdminView, sqla.ModelView):
     column_sortable_list = []
     column_searchable_list = ('first_name', 'last_name', 'email', 'description')
     column_list = ('full_name', 'email', 'description', 'roles', 'can_find_in_google')
@@ -74,7 +87,7 @@ class UserModelView(BaseModelView, sqla.ModelView):
     list_template = 'admin/lists/user_list.html'
 
 
-class RoleModelView(BaseModelView, sqla.ModelView):
+class RoleModelView(BaseAdminView, sqla.ModelView):
     column_sortable_list = []
     form_excluded_columns = ('users',)
     can_create = False
@@ -88,7 +101,7 @@ class RoleModelView(BaseModelView, sqla.ModelView):
     list_template = 'admin/lists/role_list.html'
 
 
-class ClientView(BaseView):
+class ClientView(BaseView, BaseClientView):
 
     @expose('/', methods=['GET'])
     @redirect_not_autentificated
@@ -111,4 +124,3 @@ class ClientView(BaseView):
             return True
         else:
             return False
-
