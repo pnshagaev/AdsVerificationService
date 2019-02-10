@@ -27,16 +27,11 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
     _password = db.Column(db.String(255))
-    google_api_token = db.Column(db.String(255))
-    active = db.Column(db.Boolean())
+    active = db.Column(db.Boolean(), default=True)
     confirmed_at = db.Column(db.DateTime())
     description = db.Column(db.String(255))
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
-
-    @property
-    def can_find_in_google(self):
-        return True if self.google_api_token is not None else False
 
     @hybrid_property
     def password(self):

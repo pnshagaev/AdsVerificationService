@@ -10,11 +10,17 @@ class DefaultConfig(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_DEFAULT_SENDER = MAIL_USERNAME = '**'
+    MAIL_PASSWORD = '**'
+
 
 class TestingConfig(DefaultConfig):
 
     DEBUG = True
-    TESTING = True
+    # TESTING = True
     SECRET_KEY = "powerful secretkey"
 
     # Create in-memory database
@@ -28,12 +34,9 @@ class TestingConfig(DefaultConfig):
 
     # set optional bootswatch theme
     # FLASK_ADMIN_SWATCH = 'cerulean'
-    MAIL_SERVER = 'smtp.gmail.com'
-    MAIL_PORT = 465
-    MAIL_USE_SSL = True
-    MAIL_USERNAME = '**'
-    MAIL_PASSWORD = '**'
 
 
 class ProdConfig(DefaultConfig):
-    pass
+    DATABASE_FILE = '/tmp/prod.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_FILE
+    SQLALCHEMY_ECHO = False

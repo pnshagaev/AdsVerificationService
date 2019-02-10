@@ -6,10 +6,7 @@ from flask_admin.contrib import sqla
 from flask_security import current_user
 
 from application.src.roles import RolesTypes, at_least_one_of_roles_in_roles_list, admin_roles
-from application.src.screen_save import search_words
-from flask_mail import Message, Mail
-
-mail = Mail()
+from application.src.scheduler import add_scheduled_job
 
 
 def redirect_not_autentificated(func):
@@ -25,7 +22,7 @@ def redirect_not_autentificated(func):
 
 class BaseModelView(object):
 
-   def _handle_view(self, *args, **kwargs):
+    def _handle_view(self, *args, **kwargs):
         """
         Override builtin _handle_view in order to redirect users when a view is not accessible.
         """
@@ -63,7 +60,7 @@ class MyHomeView(AdminIndexView, BaseModelView):
     @expose('/')
     @redirect_not_autentificated
     def index(self):
-        if current_user.has_role(RolesTypes.superuser.value):
+        if at_least_one_of_roles_in_roles_list(admin_roles, current_user.roles):
             return redirect(url_for('user.index_view'))
         return redirect(url_for('client.index'))
 
@@ -74,17 +71,16 @@ class MyHomeView(AdminIndexView, BaseModelView):
 class UserModelView(BaseAdminView, sqla.ModelView):
     column_sortable_list = []
     column_searchable_list = ('first_name', 'last_name', 'email', 'description')
-    column_list = ('full_name', 'email', 'description', 'roles', 'can_find_in_google')
-    form_columns = ('first_name', 'last_name', 'email', 'description', 'password', 'roles', 'google_api_token', 'active')
-    column_filters = ('roles',)
+    column_list = ('full_name', 'email', 'description', 'roles')
+    form_columns = ('first_name', 'last_name', 'email', 'description', 'password', 'roles', 'active')
     column_labels = {
         'full_name': 'ФИО',
         '_password': 'Пароль',
-        'can_find_in_google': 'Поиск в Google',
         'roles': 'Роли',
         'description': 'Заметки'
     }
     list_template = 'admin/lists/user_list.html'
+    action_disallowed_list = ['delete']
 
 
 class RoleModelView(BaseAdminView, sqla.ModelView):
@@ -113,14 +109,10 @@ class ClientView(BaseView, BaseClientView):
         data = request.form.get('data')
         if data:
             data = data.split('\n')
-            search_words(data)
+            add_scheduled_job(current_user.email, data)
             return jsonify(status=200)
         else:
             return jsonify(status=400)
 
     def is_visible(self):
-        if current_user.is_authenticated and \
-                at_least_one_of_roles_in_roles_list(admin_roles, current_user.roles):
-            return True
-        else:
-            return False
+        return current_user.is_authenticated and at_least_one_of_roles_in_roles_list(admin_roles, current_user.roles)
