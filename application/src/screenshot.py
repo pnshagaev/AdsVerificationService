@@ -1,9 +1,9 @@
-import datetime
 from pathlib import Path
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import shutil
+import os
 
 
 def setup_driver():
@@ -25,12 +25,10 @@ def create_folder(path):
     folder_to_save.mkdir(exist_ok=True)
 
 
-def search_words(words):
-    name = 'yandex_' + str(datetime.datetime.now())
+def search_words(words, name):
     path = './' + name
     create_folder(path)
     driver = setup_driver()
-    print(words)
     try:
         for word in words:
             save_yandex_screenshot(driver, word.rstrip(), path)
@@ -39,3 +37,7 @@ def search_words(words):
     shutil.make_archive(name, 'zip', path)
     driver.quit()
     return path + '.zip'
+
+
+def delete_archive(path):
+    os.remove(path)
