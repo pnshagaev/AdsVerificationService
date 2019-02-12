@@ -75,6 +75,8 @@ class UserModelView(BaseAdminView, sqla.ModelView):
     form_columns = ('first_name', 'last_name', 'email', 'description', 'password', 'roles', 'active')
     column_labels = {
         'full_name': 'ФИО',
+        'first_name': 'Имя',
+        'last_name': 'Фамилия',
         '_password': 'Пароль',
         'roles': 'Роли',
         'description': 'Заметки'
