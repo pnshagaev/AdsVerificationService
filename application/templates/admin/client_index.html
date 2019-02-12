@@ -1,30 +1,22 @@
 {% extends 'admin/master.html' %}
 {% block body %}
-
-
-{#    <form action="{{ url_for('client.index') }}" method="POST">#}
-  <div class="form-group">
-        <label for="searchTextArea">Введите поисковые запросы, одна строка - один запрос</label>
+    <div class="form-group">
+        <label for="searchTextArea">Введите поисковые запросы, каждый запрос должен начинаться с новой строки</label>
         <textarea class="form-control" id="searchTextArea" rows="3"></textarea>
     </div>
-{#        <right>#}
-  <button id="search" type="submit" class="btn btn-primary">Отправить поисковые запросы</button>
-{#            </right>#}
-{#</form>#}
-
+    <button id="search" type="submit" class="btn btn-primary">Отправить поисковые запросы</button>
 {% endblock %}
 
 {% block tail_js %}
     {{ super() }}
     <script>
-        $("#search").click(function () {
-                let data = $("#searchTextArea").val();
-                $.post( "{{ url_for('client.index') }}", {'data': data})
-                    .done(function() {alert( "Данные отправлены, ожидайте ответ на почте через  N минут" )})
-                    .fail(function() {alert( "Возникла ошибка, свяжитесь с администратором" )})
+        $('#search').click(function () {
+            let data = $("#searchTextArea").val();
+            $.post({{ url_for('client.index') }}, {'data': data})
+                .done(function () {alert('Запросы обрабатываются, ожидайте ответ ' +
+                    'на почтовом ящиеке {{ current_user.email }} через несколько минут')})
+                .fail(function () {alert('Возникла ошибка, свяжитесь с вашим менеджером')})
             }
         );
-
     </script>
-
 {% endblock tail_js %}

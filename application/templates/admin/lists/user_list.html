@@ -7,7 +7,7 @@
     <form class="icon" method="POST" action="/user/delete/">
         <input id="id" name="id" required="" value="{{ get_pk_value(row) }}" type="hidden">
         <input id="url" name="url" type="hidden" value="/user/">
-        <button onclick="return confirm('Are you sure you want to delete selected users?');" title="Delete">
+        <button onclick="return confirm('Вы действительно хотите удалить этого пользователя?');" title="Delete">
             <span class="fa fa-trash glyphicon glyphicon-trash"></span>
         </button>
     </form>
